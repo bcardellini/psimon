@@ -4,12 +4,30 @@ html(lang="en")
     title psimon
     link(rel='stylesheet', href='css/main.css')
   body
-    h1 psimon
     #simon
       .board
         .boardCenter
           .bg &Psi;
-          .display
+          .title
+            h1 psimon
           .controls
+            .settings
+              .strictness
+                label
+                  input#psiStrictness(type='checkbox', name='strict')
+                  | strict
+              .difficulty
+                | difficulty
+                input#psiDifficulty(type='number' min="2" max="24" value="7" name="shoe-size")
+              .levelBar
+                .timer
+                .level
+                  |level:
+                  span#psiLevel 1
+            .actions
+              button#psiStart start
+              button#psiReset reset
+            .messages
         .buttonsContainer 
+      .stats  
     script(src='js/bundle.js')
