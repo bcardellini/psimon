@@ -181,7 +181,7 @@ var simon = (function(){
   function endUserTurn() {
     console.log('ending user turn');
     clearInterval(turnTimer);
-    $timer.css('width',"100%").removeClass('urgent');
+    $timer.css('width',"90%").removeClass('urgent');
     isUserTurn = false;
     $controls.removeClass('userTurn');
   }
@@ -231,7 +231,7 @@ var simon = (function(){
 
   function updateUserTime(){
     timeLeft -= 1000/timeUpdateFreq;
-    var pctLeft = 0.1 * Math.floor( 10 * 100 * timeLeft / timeAllowed );
+    var pctLeft = 0.90 * 0.1 * Math.floor( 10 * 100 * timeLeft / timeAllowed );
     $timer.css('width',pctLeft+"%");
     if (timeLeft <= 3000) {
       $timer.addClass('urgent');
