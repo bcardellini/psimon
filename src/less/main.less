@@ -1,25 +1,44 @@
 @bodyBG: #33383A;
-@cream: hsl(40,30%,95%);
-@titleColor: #abc;
+//@controlsBG: hsl(40,30%,92%);
+@controlsBG: #f8f6f2;
+@controlsBorder: 1px solid #ddd;
+@controls: #444;
+@titleColor: #ccc;
+@timerBG: #ddd;
+@urgent: #b45;
+@break1: 500px;
+
 body {
   background: @bodyBG;
   color:white;
   text-align:center;
+}
+body, input {
   font-family:"Ubuntu";
 }
-
 #simon {
   width:800px;
   max-width:100%;
   min-width:300px;
   height:auto;
   margin:0 auto;
+
+  /* for mixin use */
+  .centeredCell {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
   .board {
     padding-bottom:100%;
     background-color:transparent;
     //background:#555;
     border-radius:50%;
     position:relative;
+    border-width:1px;
+    border-style:dashed;
+    border-color:rgba(255,255,255,0.3);
+    transition:border-color 0.5s;
     //box-shadow:0 3px 4px rgba(0,0,0,0.5);
     .btnOuter {
       width:50%;
@@ -72,30 +91,31 @@ body {
         left:25%;
         top:25%;
         position:absolute;
-        display:flex;
-        justify-content:center;
-        align-items:center;
+        .centeredCell;
         font-size:160px;
         user-select:none;
         -webkit-touch-callout: none; /* iOS Safari */
         //text-shadow:0 1px 0 white;
-        color:darken(@cream,5%);
+        //color:darken(@controlsBG,5%);
+        color:@controlsBG;
       }
       .title {
         position:relative;
-        margin:20% -20% 0;
+        margin:15% -20% -6%;
         width:140%;
+        z-index:200;
         h1 {
           font-style:italic;
           fill:@titleColor;
-          color:@cream;
+          color:@controlsBG;
+          stroke:@bodyBG;
+          stroke-width:1px;
           margin:0;
         }
 
       }
       .boardCenterInner {
         position: absolute;
-
         width: 90%;
         top: 5%;
         left: 5%;
@@ -105,17 +125,22 @@ body {
       }
       .controls {
         z-index: 10;
-
-        #psiReset {
-          opacity:0.2;
-        }
-        .settings {
-          background: @cream;
+        color: @controls;
+        background: @controlsBG;
+        .controlsTop {
+          border-bottom:@controlsBorder;
+          display: flex;
+          align-items:center;
+          justify-content: center;
+          position:relative;
+          &::before {
+            content:"";
+            padding-bottom:20%;
+          }
           .levelBar {
-            background: @cream;
-            position:relative;
+            display:none;
+            background:@timerBG;
             .level {
-              display:none;
               position:relative;
               z-index:2;
             }
@@ -124,41 +149,84 @@ body {
               height:100%;
               position:absolute;
               top:0;
-              left:5%;
-              width:90%;
-              background-color:lighten(@bodyBG,4%);
+              left:0;
+              width:100%;
+              background-color:@controlsBG;
               &.urgent {
-                background-color:#D00;
+                background-color:@urgent;
               }
             }
           }
-        }
-        .actions {
-          background: @cream;
-        }
-        #psiReset {
-          display:none;
-        }
-        &.userTurn #psiReset {
-          opacity:1;
-        }
-        &.playing {
-          .difficulty,
-          #psiStart {
-            display:none;
+          .difficulty {
+            display:flex;
+            justify-content:space-around;
+            align-items:center;
+            width:100%;
           }
-          .settings .levelBar .level, #psiReset {
+        }
+        &.playing .controlsTop {
+          .levelBar {
             display:block;
           }
+          .difficulty {
+            display:none;
+          }
         }
-        .messages {
-          position:absolute;
-          left:50%;
-          top:50%;
-          margin-left:-50%;
+        .controlsBottom {
+
+          display:flex;
+          align-items:stretch;
+          &::before {
+            content:"";
+            padding:0 0 20%;
+          }
+          .strictness {
+            width:50%;
+            .centeredCell;
+          }
+          .actions {
+            width:50%;
+            .centeredCell;
+            box-sizing:border-box;
+            border-left:@controlsBorder;
+            #psiReset {
+              opacity:0.2;
+              display:none;
+            }
+          }
+        }
+        &.userTurn .controlsBottom {
+          .actions #psiReset {
+            opacity:1;
+          }
+        }
+        &.userTurn .controlsTop {
+          background:@timerBG;
+        }
+        &.playing .controlsBottom {
+          .actions #psiStart {
+            display:none;
+          }
+          .actions #psiReset {
+            display:inline;
+          }
+        }
+        font-size:15px;
+        @media (min-width: @break1) {
+            font-size:24px;
+        }
+        input {
+          font-size:15px;
+          @media (min-width: @break1) {
+            font-size:24px;
+          }
         }
       }
-
+      .messages {
+        position:absolute;
+        left:50%;
+        top:80%;
+      }
     }
   }
 

@@ -2,6 +2,7 @@ doctype html
 html(lang="en")
   head
     title psimon
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel='stylesheet', href='css/main.css')
   body
     #simon
@@ -15,25 +16,26 @@ html(lang="en")
                   title psimon
                   use(xlink:href='#psimonTitle')
             .controls
-              .settings
-                .strictness
-                  label
-                    input#psiStrictness(type='checkbox', name='strict')
-                    | strict
+              .controlsTop
                 .difficulty
                   | difficulty
-                  input#psiDifficulty(type='number' min="2" max="24" value="7" name="shoe-size")
+                  input#psiDifficulty(type='number' min="2" max="24" value="7" name="difficulty")
                 .levelBar
                   .timer
                   .level
                     |level:
                     span#psiLevel 1
-              .actions
-                button#psiStart start
-                button#psiReset reset 
-              .messages
+              .controlsBottom                    
+                .strictness
+                  label
+                    input#psiStrictness(type='checkbox', name='strict')
+                    | strict                  
+                .actions
+                  button#psiStart start
+                  button#psiReset reset 
+            .messages
         .buttonsContainer
       .stats  
-    include svg/psimon3.svg
+    include svg/psimon.svg
     script(src='js/bundle.js')
     

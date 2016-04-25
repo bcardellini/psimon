@@ -11,8 +11,8 @@ var simon = (function(){
   var gapDegrees = 6;
   var toneTime = 500;
   var toneGap = 100;
-  var userTimeBase = 3000;
-  var userTimePerMove = 3000;
+  var userTimeBase = 4000;
+  var userTimePerMove = 2000;
   var timeUpdateFreq = 10; //Hz
   var movesToWin = 20;
   var strictMode = false;
@@ -30,6 +30,7 @@ var simon = (function(){
 
   // cache dom handles
   var $simon = $('#simon');
+  var $board = $simon.find('.board');
   var $btnsContainer = $simon.find('.buttonsContainer');
   var $controls = $simon.find('.controls');
   var $startBtn = $simon.find('#psiStart');
@@ -74,6 +75,7 @@ var simon = (function(){
       addButton(i, btnHue, btnTone, btnPosition, positionSpan);
     }
     $btnsContainer.find('.btnTarget').fadeIn(600);
+    $board.css('border-color','transparent');
   }
 
 
@@ -81,7 +83,6 @@ var simon = (function(){
     var outerTransform = 'translate(100%,0) rotate(' + position + 'deg)';
     var innerTransform = 'rotate(' + Math.ceil(positionSpan-gapDegrees-180) + 'deg)';
     var bgColor = 'hsl(' + hue + ', ' + buttonSaturation + ', ' + buttonLightness + ')';
-    //var $btn = $('<div/>', { 'class':'btnTarget', 'css':{'background-color':bgColor} });
     buttons[i] = {
       tone: tone,
       $el: $('<div/>', { 'class':'btnTarget', 'css':{'background-color':bgColor, 'display':'none'} })
@@ -110,7 +111,9 @@ var simon = (function(){
   }
 
   function startSound(tone, shape = 'square'){
+    console.log('starting sound');
     if(audioContext){
+      console.log('there is audio context');
       oscillator = audioCtx.createOscillator();
       oscillator.connect(gainNode);
       oscillator.frequency.value = tone;
@@ -179,9 +182,8 @@ var simon = (function(){
   }
 
   function endUserTurn() {
-    console.log('ending user turn');
     clearInterval(turnTimer);
-    $timer.css('width',"90%").removeClass('urgent');
+    $timer.css('width',"100%").removeClass('urgent');
     isUserTurn = false;
     $controls.removeClass('userTurn');
   }
@@ -190,7 +192,7 @@ var simon = (function(){
     var nextMove = Math.floor( buttonCount * Math.random() );
     seq.push(nextMove);
     $levelOut.text(seq.length);
-    showMove(0);
+    showMove(0); 
   }
 
   function resetGameplay () {
@@ -231,7 +233,7 @@ var simon = (function(){
 
   function updateUserTime(){
     timeLeft -= 1000/timeUpdateFreq;
-    var pctLeft = 0.90 * 0.1 * Math.floor( 10 * 100 * timeLeft / timeAllowed );
+    var pctLeft =  0.1 * Math.floor( 10 * 100 * timeLeft / timeAllowed );
     $timer.css('width',pctLeft+"%");
     if (timeLeft <= 3000) {
       $timer.addClass('urgent');
