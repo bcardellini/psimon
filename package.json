@@ -23,8 +23,8 @@
     "watch:scripts": "watch \"npm run build:scripts\" src/js --wait=1",
     "watch:test": "watch \"npm run test\" pubic --wait=1",
     "serve": "http-server public",
-    "open:dev": "opener http://localhost:8080",
-    "dev": "npm run open:dev & parallelshell \"npm run serve\" \"npm run watch \""
+    "dev:open": "opener http://localhost:8080",
+    "dev": "npm run dev:open & parallelshell \"npm run serve\" \"npm run watch \""
   },
   "author": "",
   "license": "ISC",

@@ -13,7 +13,7 @@ var simon = (function(){
   var toneGap = 100;
   var userTimeBase = 4000;
   var userTimePerMove = 2000;
-  var timeUpdateFreq = 10; //Hz
+  var timeUpdateFreq = 1; //Hz
   var movesToWin = 20;
   var strictMode = false;
 
@@ -88,7 +88,7 @@ var simon = (function(){
       $el: $('<div/>', { 'class':'btnTarget', 'css':{'background-color':bgColor, 'display':'none'} })
     };
     //$btn.bind('mousedown', {id:i}, userPress);
-    buttons[i].$el.bind('mousedown', {id:i}, userPress);
+    buttons[i].$el.bind('mousedown touchstart', {id:i}, userPress);
     $btnsContainer.append(
       $('<div/>', { 'class':'btnOuter', 'css':{'transform':outerTransform} }).append(
         $('<div/>', { 'class':'btnInner', 'css':{'transform':innerTransform} }).append( buttons[i].$el )
@@ -108,6 +108,7 @@ var simon = (function(){
         userPressIncorrect(event, id);
       }
     }
+    return false;
   }
 
   function startSound(tone, shape = 'square'){
@@ -132,7 +133,7 @@ var simon = (function(){
   function userPressCorrect (event, id) {
     startSound(buttons[id].tone);
     buttons[id].$el.addClass('pressed')
-                   .bind('mouseup mouseleave', userReleaseCorrect);
+                   .bind('mouseup mouseleave touchend', userReleaseCorrect);
     userMove++;
   }
 
@@ -140,13 +141,13 @@ var simon = (function(){
     // negative feedback
     startSound(badTone, 'sawtooth');
     buttons[id].$el.addClass('wrong')
-                   .bind('mouseup mouseleave', userReleaseIncorrect);
+                   .bind('mouseup mouseleave touchend', userReleaseIncorrect);
   }
 
   function userReleaseCorrect (event) {
     stopSound();
     $(event.target).removeClass('pressed')
-                   .off('mouseup mouseleave');
+                   .off('mouseup mouseleave touchend');
     if (userMove === seq.length) {
       if (seq.length > best) {
         best = seq.length;
@@ -160,12 +161,13 @@ var simon = (function(){
         setTimeout(startNextLevel, 500);
       }
     }
+    return false;
   }
 
   function userReleaseIncorrect (event) {
     stopSound();
     $(event.target).removeClass('wrong')
-                   .off('mouseup mouseleave');
+                   .off('mouseup mouseleave touchend');
     if ( $strictIn.prop('checked') ) {  //srict mode, end game
       $msg.text('game over').css('display','block').fadeOut(4000);
       resetGameplay();
@@ -174,6 +176,7 @@ var simon = (function(){
       $msg.text('try again').css('display','block').fadeOut(2000);
       setTimeout(showMove, 1000, 0);
     }
+    return false;
   }
 
   function win() {
@@ -192,7 +195,7 @@ var simon = (function(){
     var nextMove = Math.floor( buttonCount * Math.random() );
     seq.push(nextMove);
     $levelOut.text(seq.length);
-    showMove(0); 
+    showMove(0);
   }
 
   function resetGameplay () {
