@@ -87,35 +87,6 @@ body, input {
       left:20%;
       top:20%;
       border-radius:50%;
-      .bg {
-        width:50%;
-        height:50%;
-        left:25%;
-        top:25%;
-        position:absolute;
-        .centeredCell;
-        font-size:160px;
-        user-select:none;
-        -webkit-touch-callout: none; /* iOS Safari */
-        //text-shadow:0 1px 0 white;
-        //color:darken(@controlsBG,5%);
-        color:@controlsBG;
-      }
-      .title {
-        position:relative;
-        margin:15% -20% -6%;
-        width:140%;
-        z-index:200;
-        h1 {
-          font-style:italic;
-          fill:@titleColor;
-          color:@controlsBG;
-          stroke:@bodyBG;
-          stroke-width:1px;
-          margin:0;
-        }
-
-      }
       .boardCenterInner {
         position: absolute;
         width: 90%;
@@ -124,117 +95,145 @@ body, input {
         height: 90%;
         border-radius: 50%;
         overflow:hidden;
-      }
-      .controls {
-        z-index: 10;
-        color: @controls;
-        background: @controlsBG;
-        .controlsTop {
-          border-bottom:@controlsBorder;
-          display: flex;
-          align-items:center;
-          justify-content: center;
-          position:relative;
-          &::before {
-            content:"";
-            padding-bottom:20%;
+        .stats {
+          position:absolute;
+          .centeredCell;
+          padding-top:5%;
+          width:100%;
+          color:desaturate(darken(@controlsBG, 50%),30%);
+          .num {
+            font-size:20px;
+            vertical-align:middle;
+            padding-left:5px;
           }
-          .levelBar {
-            display:none;
-            //background:@timerBG;
-            .level {
-              position:relative;
-              z-index:2;
+        }
+        .title {
+          position:relative;
+          margin:15% -20% -6%;
+          width:140%;
+          z-index:200;
+          h1 {
+            font-style:italic;
+            fill:@titleColor;
+            color:@controlsBG;
+            stroke:@bodyBG;
+            stroke-width:1px;
+            margin:0;
+          }
+
+        }
+
+        .controls {
+          z-index: 10;
+          color: @controls;
+          background: @controlsBG;
+          .controlsTop {
+            border-bottom:@controlsBorder;
+            display: flex;
+            align-items:center;
+            justify-content: center;
+            position:relative;
+            &::before {
+              content:"";
+              padding-bottom:20%;
             }
-            .timer {
-              z-index:1;
-              height:100%;
-              position:absolute;
-              top:0;
-              left:0;
-              width:100%;
-              background-color:@controlsBG;
-              &.urgent {
-                background-color:@urgent;
+            .levelBar {
+              display:none;
+              //background:@timerBG;
+              .level {
+                position:relative;
+                z-index:2;
+              }
+              .timer {
+                z-index:1;
+                height:100%;
+                position:absolute;
+                top:0;
+                left:0;
+                width:100%;
+                background-color:@controlsBG;
+                &.urgent {
+                  background-color:@urgent;
+                }
               }
             }
+            .difficulty {
+              display:flex;
+              justify-content:space-around;
+              align-items:center;
+              width:100%;
+            }
           }
-          .difficulty {
-            display:flex;
-            justify-content:space-around;
-            align-items:center;
-            width:100%;
-          }
-        }
-        &.playing .controlsTop {
-          .levelBar {
-            display:block;
-          }
-          .difficulty {
-            display:none;
-          }
-        }
-        .controlsBottom {
-
-          display:flex;
-          align-items:stretch;
-          &::before {
-            content:"";
-            padding:0 0 20%;
-          }
-          .strictness {
-            width:50%;
-            .centeredCell;
-          }
-          .actions {
-            width:50%;
-            .centeredCell;
-            box-sizing:border-box;
-            border-left:@controlsBorder;
-            #psiReset {
-              opacity:0.2;
+          &.playing .controlsTop {
+            .levelBar {
+              display:block;
+            }
+            .difficulty {
               display:none;
             }
           }
-        }
-        &.userTurn .controlsBottom {
-          .actions #psiReset {
-            opacity:1;
+          .controlsBottom {
+
+            display:flex;
+            align-items:stretch;
+            &::before {
+              content:"";
+              padding:0 0 20%;
+            }
+            .strictness {
+              width:50%;
+              .centeredCell;
+            }
+            .actions {
+              width:50%;
+              .centeredCell;
+              box-sizing:border-box;
+              border-left:@controlsBorder;
+              #psiReset {
+                opacity:0.2;
+                display:none;
+              }
+            }
           }
-        }
-        &.userTurn .controlsTop {
-          background:@timerBG;
-        }
-        &.playing .controlsBottom {
-          .actions #psiStart {
-            display:none;
+          &.userTurn .controlsBottom {
+            .actions #psiReset {
+              opacity:1;
+            }
           }
-          .actions #psiReset {
-            display:inline;
+          &.userTurn .controlsTop {
+            background:@timerBG;
           }
-        }
-        font-size:15px;
-        @media (min-width: @break1) {
-            font-size:24px;
-        }
-        input {
+          &.playing .controlsBottom {
+            .actions #psiStart {
+              display:none;
+            }
+            .actions #psiReset {
+              display:inline;
+            }
+          }
           font-size:15px;
+          @media (min-width: @break1) {
+              font-size:24px;
+          }
+          input {
+            font-size:15px;
+            @media (min-width: @break1) {
+              font-size:24px;
+            }
+          }
+        }
+        .messages {
+          .centeredCell;
+          background-color:@timerBG;
+          font-style:italic;
+          line-height:1;
+          color:@controlsBG;
+          padding:10px;
+          font-size:16px;
+          display:none;
           @media (min-width: @break1) {
             font-size:24px;
           }
-        }
-      }
-      .messages {
-        .centeredCell;
-        background-color:@timerBG;
-        font-style:italic;
-        line-height:1;
-        color:@controlsBG;
-        padding:10px;
-        font-size:16px;
-        display:none;
-        @media (min-width: @break1) {
-          font-size:24px;
         }
       }
     }

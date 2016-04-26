@@ -149,7 +149,7 @@ var simon = (function(){
     if (userMove === seq.length) {
       if (seq.length > best) {
         best = seq.length;
-        $stats.text("high score: "+best);
+        $stats.html("high score: <span class='num'>"+best+"</span>");
         $stats.fadeIn(500);
       }
       if (seq.length === movesToWin){
