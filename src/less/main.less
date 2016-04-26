@@ -1,13 +1,14 @@
 @bodyBG: #33383A;
 //@controlsBG: hsl(40,30%,92%);
 @controlsBG: #f8f6f2;
-@controlsBorder: 1px solid #abc;
+@controlsBorder: 1px solid @titleColor;
 @controls: #444;
-@titleColor: #abc;
-@timerBG: #abc;
+@titleColor: #b0b8bf;
+@timerBG: @titleColor;
 @urgent: #b45;
-@wrong: #b45;
+@wrong: @urgent;
 @break1: 500px;
+
 
 body {
   background: @bodyBG;
@@ -23,7 +24,13 @@ body, input {
   min-width:300px;
   height:auto;
   margin:0 auto;
-
+  .simonInner {
+    max-width:94vh;
+    min-width:300px;
+    margin:0 auto;
+    width:100%;
+    overflow:hidden;
+  }
   /* for mixin use */
   .centeredCell {
     display:flex;
@@ -212,12 +219,12 @@ body, input {
             }
           }
           font-size:15px;
-          @media (min-width: @break1) {
+          @media (min-width: @break1) and (min-height: @break1) {
               font-size:24px;
           }
           input {
             font-size:15px;
-            @media (min-width: @break1) {
+            @media (min-width: @break1) and (min-height: @break1) {
               font-size:24px;
             }
           }
@@ -231,12 +238,12 @@ body, input {
           padding:10px;
           font-size:16px;
           display:none;
-          @media (min-width: @break1) {
+          @media (min-width: @break1) and (min-height: @break1) {
             font-size:24px;
           }
         }
       }
     }
   }
-
 }
+#svgSprite {display:none;}

@@ -6,36 +6,37 @@ html(lang="en")
     link(rel='stylesheet', href='css/main.css')
   body
     #simon
-      .board
-        .boardCenter
-          .boardCenterInner
-            //.bg &Psi;
-            .stats
-            .title
-              h1
-                svg(viewbox="0 0 240 40")
-                  title psimon
-                  use(xlink:href='#psimonTitle')
-            .controls
-              .controlsTop
-                .difficulty
-                  | difficulty
-                  input#psiDifficulty(type='number' min="2" max="24" value="7" name="difficulty")
-                .levelBar
-                  .timer
-                  .level
-                    |level:
-                    span#psiLevel 1
-              .controlsBottom                    
-                .strictness
-                  label
-                    input#psiStrictness(type='checkbox', name='strict')
-                    | strict                  
-                .actions
-                  button#psiStart start
-                  button#psiReset reset 
-            .messages
-        .buttonsContainer  
-    include svg/psimon.svg
+      .simonInner
+        .board
+          .boardCenter
+            .boardCenterInner
+              //.bg &Psi;
+              .stats
+              .title
+                h1
+                  svg(viewbox="0 0 240 40")
+                    title psimon
+                    use(xlink:href='#psimonTitle')
+              .controls
+                .controlsTop
+                  .difficulty
+                    | difficulty
+                    input#psiDifficulty(type='number' min="2" max="24" value="7" name="difficulty")
+                  .levelBar
+                    .timer
+                    .level
+                      |level:
+                      span#psiLevel 1
+                .controlsBottom                    
+                  .strictness
+                    label
+                      input#psiStrictness(type='checkbox', name='strict')
+                      | strict                  
+                  .actions
+                    button#psiStart start
+                    button#psiReset reset 
+              .messages
+          .buttonsContainer  
+    include svg/psimon.svg 
     script(src='js/bundle.js')
     
