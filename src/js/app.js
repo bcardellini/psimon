@@ -13,9 +13,8 @@ var simon = (function(){
   var toneGap = 100;
   var userTimeBase = 4000;
   var userTimePerMove = 2000;
-  var timeUpdateFreq = 1; //Hz
+  //var timeUpdateFreq = 1; //Hz
   var movesToWin = 20;
-  var strictMode = false;
 
   //gameplay internal vars
   var seq = [];
@@ -25,7 +24,7 @@ var simon = (function(){
   var buttons = [];
   var turnTimer;
   var timeAllowed;
-  var timeLeft;
+  var turnStartTime;
   var best = 0;
 
   // cache dom handles
@@ -85,6 +84,7 @@ var simon = (function(){
     var bgColor = 'hsl(' + hue + ', ' + buttonSaturation + ', ' + buttonLightness + ')';
     buttons[i] = {
       tone: tone,
+      hue: hue,
       $el: $('<div/>', { 'class':'btnTarget', 'css':{'background-color':bgColor, 'display':'none'} })
     };
     //$btn.bind('mousedown', {id:i}, userPress);
@@ -100,7 +100,7 @@ var simon = (function(){
     if(isUserTurn){
       var id = event.data.id;
       if ( userMove === seq.length-1 ){
-        clearInterval(turnTimer);
+        cancelAnimationFrame(turnTimer);
       }
       if ( id == seq[userMove] ){
         userPressCorrect(event, id);
@@ -112,9 +112,7 @@ var simon = (function(){
   }
 
   function startSound(tone, shape = 'square'){
-    console.log('starting sound');
     if(audioContext){
-      console.log('there is audio context');
       oscillator = audioCtx.createOscillator();
       oscillator.connect(gainNode);
       oscillator.frequency.value = tone;
@@ -169,23 +167,23 @@ var simon = (function(){
     $(event.target).removeClass('wrong')
                    .off('mouseup mouseleave touchend');
     if ( $strictIn.prop('checked') ) {  //srict mode, end game
-      $msg.text('game over').css('display','block').fadeOut(4000);
+      $msg.text('game over').css('display','block').delay(2000).fadeOut(2000);
       resetGameplay();
     } else {  // replay this level's sequence
       endUserTurn();
-      $msg.text('try again').css('display','block').fadeOut(2000);
+      $msg.text('try again').css('display','block').delay(1000).fadeOut(2000);
       setTimeout(showMove, 1000, 0);
     }
     return false;
   }
 
   function win() {
-    $msg.text('winner!!').css('display','block').fadeOut(5000);
+    $msg.text('WINNER!!').css('display','block').delay(5000).fadeOut(5000);
     resetGameplay();
   }
 
   function endUserTurn() {
-    clearInterval(turnTimer);
+    cancelAnimationFrame(turnTimer);
     $timer.css('width',"100%").removeClass('urgent');
     isUserTurn = false;
     $controls.removeClass('userTurn');
@@ -213,46 +211,53 @@ var simon = (function(){
     }  else {
       //play sound
       btnID = seq[move];
-      startSound(buttons[btnID].tone);
+      //var color = 'background-color','hsl(' + buttons[btnId].hue + ', 70, ' + buttonLightness + ')'
+      //buttons[btnID].$el.css('background-color',color);
       buttons[btnID].$el.addClass('indicate');
+      startSound(buttons[btnID].tone);
       setTimeout(showNextMove, toneTime, move+1);
     }
   }
 
   function showNextMove(move) {
     stopSound();
+    var hue = buttons[btnID].hue;
+    //buttons[btnID].$el.css('background-color','hsl(' + hue + ', ' + buttonSaturation + ', ' + buttonLightness + ')');
     buttons[btnID].$el.removeClass('indicate');
     setTimeout(showMove, toneGap, move);
   }
 
   function startUserTurn(){
     timeAllowed = userTimeBase + userTimePerMove * seq.length;
-    timeLeft = timeAllowed;
-    turnTimer = setInterval(updateUserTime,1000/timeUpdateFreq);
+    turnStartTime = null;
+    turnTimer = requestAnimationFrame(updateUserTime);
     isUserTurn = true;
     userMove = 0;
     $controls.addClass('userTurn');
   }
 
-  function updateUserTime(){
-    timeLeft -= 1000/timeUpdateFreq;
-    var pctLeft =  0.1 * Math.floor( 10 * 100 * timeLeft / timeAllowed );
-    $timer.css('width',pctLeft+"%");
-    if (timeLeft <= 3000) {
-      $timer.addClass('urgent');
+  function updateUserTime(timestamp){
+    if (!turnStartTime) { turnStartTime = timestamp; }
+    timeLeft = timeAllowed - (timestamp - turnStartTime);
+    if (timeLeft > 0) {
+      var pctLeft =  0.1 * Math.floor( 10 * 100 * timeLeft / timeAllowed );
+      $timer.css('width',pctLeft+"%");
+      if (timeLeft <= 3000) {
+        $timer.addClass('urgent');
+      }
+      turnTimer = requestAnimationFrame(updateUserTime);
     }
-    if (timeLeft <= 0){
-      clearInterval(turnTimer);
+    else {
+      // time is up
       $timer.removeClass('urgent');
       if ( $strictIn.prop('checked') ) {  //srict mode, end game
-        $msg.text('time is up \n game over').css('display','block').fadeOut(4000);
+        $msg.html('time is up <br> game over').css('display','block').delay(3000).fadeOut(1000);
         resetGameplay();
       } else {  // replay this level's sequence
-        $msg.text('time is up \n try again').css('display','block').fadeOut(2000);
+        $msg.html('time is up <br> try again').css('display','block').delay(1000).fadeOut(1000);
         endUserTurn();
         setTimeout(showMove, 1000, 0);
       }
-
     }
   }
 

@@ -1,11 +1,12 @@
 @bodyBG: #33383A;
 //@controlsBG: hsl(40,30%,92%);
 @controlsBG: #f8f6f2;
-@controlsBorder: 1px solid #ddd;
+@controlsBorder: 1px solid #abc;
 @controls: #444;
-@titleColor: #ccc;
-@timerBG: #ddd;
+@titleColor: #abc;
+@timerBG: #abc;
 @urgent: #b45;
+@wrong: #b45;
 @break1: 500px;
 
 body {
@@ -64,14 +65,15 @@ body, input {
       position:absolute;
       pointer-events:auto;
       overflow:hidden;
-      background-blend-mode:exclude;
-      background-image:radial-gradient(rgba(100,100,100,0.85),rgba(100,100,100,0.85));
       cursor:pointer;
+      background-image:linear-gradient(rgba(100,100,100,0.85),rgba(100,100,100,0.85));
+      background-blend-mode:exclusion;
       &.pressed, &.indicate {
-          background-blend-mode:lighten;
+        background-image:none;
       }
       &.wrong {
-        background-image:radial-gradient(#D00 52%, #F88 61%, #D00 70%);
+        background-image:linear-gradient(@wrong, @wrong);
+        background-blend-mode:normal;
       }
     }
 
@@ -139,7 +141,7 @@ body, input {
           }
           .levelBar {
             display:none;
-            background:@timerBG;
+            //background:@timerBG;
             .level {
               position:relative;
               z-index:2;
@@ -223,9 +225,17 @@ body, input {
         }
       }
       .messages {
-        position:absolute;
-        left:50%;
-        top:80%;
+        .centeredCell;
+        background-color:@timerBG;
+        font-style:italic;
+        line-height:1;
+        color:@controlsBG;
+        padding:10px;
+        font-size:16px;
+        display:none;
+        @media (min-width: @break1) {
+          font-size:24px;
+        }
       }
     }
   }
