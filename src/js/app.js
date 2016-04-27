@@ -3,19 +3,19 @@ var $ = require('jQuery');
 var simon = (function(){
 
   // default values
-  var maxTone = 500;
-  var minTone = 250;
-  var badTone = 100;
-  var buttonSaturation = "40%";
-  var buttonLightness = "50%";
-  var gapDegrees = 6;
-  var gapPercent = 0.3;
-  var toneTime = 500;
-  var toneGap = 100;
-  var userTimeBase = 4000;
-  var userTimePerMove = 2000;
-  //var timeUpdateFreq = 1; //Hz
-  var movesToWin = 20;
+  const maxTone = 500;
+  const minTone = 250;
+  const badTone = 100;
+  const buttonSaturation = "40%";
+  const buttonLightness = "50%";
+  const gapPercent = 0.3;
+  const toneTime = 500;
+  const toneGap = 100;
+  const userTimeBase = 4000;
+  const userTimePerMove = 2000;
+  const minDifficulty = 2;
+  const maxDifficulty = 12;
+  const movesToWin = 20;
 
   //gameplay internal vars
   var seq = [];
@@ -35,9 +35,12 @@ var simon = (function(){
   var $controls = $simon.find('.controls');
   var $startBtn = $simon.find('#psiStart');
   var $resetBtn = $simon.find('#psiReset');
-  var $difficultyIn = $simon.find('#psiDifficulty');
+  var $difficulty = $simon.find('#psiDifficulty');
   var $levelOut = $simon.find('#psiLevel');
   var $strictIn = $simon.find('#psiStrictness');
+  var $difficultyBtns = $simon.find('.difficulty .stepper');
+  var $difficultyPlus = $difficultyBtns.filter('.plus');
+  var $difficultyMinus = $difficultyBtns.filter('.minus');
   var $msg = $simon.find('.messages');
   var $timer = $simon.find('.timer');
   var $stats = $simon.find('.stats');
@@ -45,6 +48,7 @@ var simon = (function(){
   // enable controls
   $startBtn.click(startGame);
   $resetBtn.click(resetGameplay);
+  $difficultyBtns.click(incrementDifficulty);
 
   // set up audio
   var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -56,6 +60,21 @@ var simon = (function(){
     gainNode.connect(audioCtx.destination);
     gainNode.gain.value = 0.3;
     oscillator.type = 'square';
+  }
+
+  function incrementDifficulty(event){
+    var currDiff = $difficulty.data('difficulty');
+    var direction = event.target.value;
+    var newDiff = currDiff;
+    if (direction == 'plus'){
+      $difficultyMinus.prop('disabled',false);
+      newDiff++;
+    } else if (direction == 'minus') {
+      $difficultyPlus.prop('disabled',false);
+      newDiff--;
+    }
+    if ( newDiff >= maxDifficulty || newDiff <= minDifficulty ) { event.target.disabled= true; }
+    $difficulty.data('difficulty',newDiff).text(newDiff);
   }
 
 
@@ -274,7 +293,7 @@ var simon = (function(){
 
   function startGame(){
     $controls.addClass('playing');
-    var newButtonCount = $difficultyIn.val();
+    var newButtonCount = $difficulty.data('difficulty');
     if(newButtonCount != buttonCount){
       buttonCount = newButtonCount;
       generateButtons();

@@ -17,7 +17,7 @@
     "build:scripts": "mkdir public\\js && browserify src/js/app.js -d -o public/js/bundle.js",
     "build:scripts2": "mkdir public\\js && browserify src/js/app.js -t [ babelify --presets [ es2015 ] ] | uglifyjs -mc > public/js/bundle.js",
     "test": "mocha -w test/test.js",
-    "watch": "parallelshell \"npm run watch:styles -s\" \"npm run watch:scripts -s\" \"npm run watch:markup -s\"",
+    "watch": "parallelshell \"npm run watch:styles\" \"npm run watch:scripts\" \"npm run watch:markup\"",
     "watch:markup": "npm run build:markup -- -w",
     "watch:styles": "watch \"npm run build:styles\" src/less/ --wait=1",
     "watch:scripts": "watch \"npm run build:scripts\" src/js --wait=1",

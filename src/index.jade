@@ -20,18 +20,23 @@ html(lang="en")
               .controls
                 .controlsTop
                   .difficulty
-                    | difficulty
-                    input#psiDifficulty(type='number' min="2" max="24" value="7" name="difficulty")
+                    span difficulty
+                    .buttonSet
+                      button.stepper.plus(value="plus") &#8679;
+                      #psiDifficulty(data-difficulty="7") 7
+                      button.stepper.minus(value="minus") &#8681;
                   .levelBar
                     .timer
                     .level
-                      |level:
+                      |level
                       span#psiLevel 1
                 .controlsBottom                    
                   .strictness
-                    label
+                    label.checkSlide
+                      span strict
                       input#psiStrictness(type='checkbox', name='strict')
-                      | strict                  
+                      .slider
+                        .peg
                   .actions
                     button#psiStart start
                     button#psiReset reset 
