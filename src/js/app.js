@@ -6,9 +6,10 @@ var simon = (function(){
   var maxTone = 500;
   var minTone = 250;
   var badTone = 100;
-  var buttonSaturation = "60%";
+  var buttonSaturation = "40%";
   var buttonLightness = "50%";
   var gapDegrees = 6;
+  var gapPercent = 0.3;
   var toneTime = 500;
   var toneGap = 100;
   var userTimeBase = 4000;
@@ -70,7 +71,7 @@ var simon = (function(){
     for (let i=0; i<buttonCount; i++){
       let btnHue      = ( hueSeed + i * hueSpan ) % 360;
       let btnTone     = minTone + i * toneSpan;
-      let btnPosition = 0.1 * Math.floor( 10 * (i*positionSpan+(gapDegrees/2)) );
+      let btnPosition = 0.1 * Math.floor( 10 * (i*positionSpan) );
       addButton(i, btnHue, btnTone, btnPosition, positionSpan);
     }
     $btnsContainer.find('.btnTarget').fadeIn(600);
@@ -79,13 +80,23 @@ var simon = (function(){
 
 
   function addButton(i, hue, tone, position, positionSpan){
-    var outerTransform = 'translate(100%,0) rotate(' + position + 'deg)';
-    var innerTransform = 'rotate(' + Math.ceil(positionSpan-gapDegrees-180) + 'deg)';
+    var outerTransform =  'translateX(100%) rotate(' + position + 'deg) '+
+                          'translateX(' + gapPercent +'%)';
+    var innerTransform =  'translateX(-' + gapPercent +'%) '+
+                          'rotate(' + 0.1 * Math.ceil(10*(positionSpan-180)) + 'deg) '+
+                          'translateX(' + gapPercent +'%)';
     var bgColor = 'hsl(' + hue + ', ' + buttonSaturation + ', ' + buttonLightness + ')';
     buttons[i] = {
       tone: tone,
       hue: hue,
-      $el: $('<div/>', { 'class':'btnTarget', 'css':{'background-color':bgColor, 'display':'none'} })
+      $el: $('<div/>', {
+        'class':'btnTarget',
+        'css':{
+          'background-color':bgColor,
+          'display':'none',
+          'left':(-100 - gapPercent) + '%'
+        }
+      })
     };
     //$btn.bind('mousedown', {id:i}, userPress);
     buttons[i].$el.bind('mousedown touchstart', {id:i}, userPress);
