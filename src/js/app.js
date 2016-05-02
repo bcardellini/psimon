@@ -50,6 +50,9 @@ var simon = (function(){
   $resetBtn.click(resetGameplay);
   $difficultyBtns.click(incrementDifficulty);
 
+
+  //  ######  GAMEPLAY FUNCTIONS  ########
+
   // set up audio
   var audioContext = window.AudioContext || window.webkitAudioContext;
   if (!audioContext){  alert("try Chrome, Firefox, or Safari to play this game with sound"); }
@@ -73,7 +76,7 @@ var simon = (function(){
       $difficultyPlus.prop('disabled',false);
       newDiff--;
     }
-    if ( newDiff >= maxDifficulty || newDiff <= minDifficulty ) { event.target.disabled= true; }
+    if ( newDiff >= maxDifficulty || newDiff <= minDifficulty ) { event.target.disabled = true; }
     $difficulty.data('difficulty',newDiff).text(newDiff);
   }
 
@@ -84,7 +87,7 @@ var simon = (function(){
     buttons.length = 0;
     var hueSpan      = Math.floor( 360 / buttonCount );
     var hueSeed      = Math.floor( hueSpan * Math.random() );
-    //hueSeed = 0;  // shifting colors makes the game too hard
+    //hueSeed = 0;  // use if shifting colors makes the game too hard
     var toneSpan     = Math.floor( (maxTone-minTone) / buttonCount );
     var positionSpan = 360 / buttonCount;
     for (let i=0; i<buttonCount; i++){
@@ -117,7 +120,6 @@ var simon = (function(){
         }
       })
     };
-    //$btn.bind('mousedown', {id:i}, userPress);
     buttons[i].$el.bind('mousedown touchstart', {id:i}, userPress);
     $btnsContainer.append(
       $('<div/>', { 'class':'btnOuter', 'css':{'transform':outerTransform} }).append(
@@ -178,9 +180,7 @@ var simon = (function(){
                    .off('mouseup mouseleave touchend');
     if (userMove === seq.length) {
       if (seq.length > best) {
-        best = seq.length;
-        $stats.html("high score: <span class='num'>"+best+"</span>");
-        $stats.fadeIn(500);
+        updateHighScore(seq.length);
       }
       if (seq.length === movesToWin){
         win();
@@ -190,6 +190,11 @@ var simon = (function(){
       }
     }
     return false;
+  }
+
+  function updateHighScore(newHigh){
+    $stats.html("high score: <span class='num'>"+newHigh+"</span>");
+    $stats.fadeIn(500);
   }
 
   function userReleaseIncorrect (event) {
@@ -274,16 +279,19 @@ var simon = (function(){
       turnTimer = requestAnimationFrame(updateUserTime);
     }
     else {
-      // time is up
-      $timer.removeClass('urgent');
-      if ( $strictIn.prop('checked') ) {  //srict mode, end game
-        $msg.html('time is up <br> game over').css('display','block').delay(3000).fadeOut(1000);
-        resetGameplay();
-      } else {  // replay this level's sequence
-        $msg.html('time is up <br> try again').css('display','block').delay(1000).fadeOut(1000);
-        endUserTurn();
-        setTimeout(showMove, 1000, 0);
-      }
+      timeUp();
+    }
+  }
+
+  function timeUp(){
+    $timer.removeClass('urgent');
+    if ( $strictIn.prop('checked') ) {  //srict mode, end game
+      $msg.html('time is up <br> game over').css('display','block').delay(3000).fadeOut(1000);
+      resetGameplay();
+    } else {  // replay this level's sequence
+      $msg.html('time is up <br> try again').css('display','block').delay(1000).fadeOut(1000);
+      endUserTurn();
+      setTimeout(showMove, 1000, 0);
     }
   }
 
@@ -297,6 +305,6 @@ var simon = (function(){
     setTimeout(startNextLevel, 1000);
   }
 
-
+  $controls.fadeIn();
 
 })();
