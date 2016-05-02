@@ -239,22 +239,17 @@ var simon = (function(){
     if (move >= seq.length) {
       startUserTurn();
     }  else {
-      //play sound
-      btnID = seq[move];
-      //var color = 'background-color','hsl(' + buttons[btnId].hue + ', 70, ' + buttonLightness + ')'
-      //buttons[btnID].$el.css('background-color',color);
+      var btnID = seq[move];
       buttons[btnID].$el.addClass('indicate');
       startSound(buttons[btnID].tone);
-      setTimeout(showNextMove, toneTime, move+1);
+      setTimeout(showNextMove, toneTime, move+1, btnID);
     }
   }
 
-  function showNextMove(move) {
+  function showNextMove(nextMove, lastBtnID) {
     stopSound();
-    var hue = buttons[btnID].hue;
-    //buttons[btnID].$el.css('background-color','hsl(' + hue + ', ' + buttonSaturation + ', ' + buttonLightness + ')');
-    buttons[btnID].$el.removeClass('indicate');
-    setTimeout(showMove, toneGap, move);
+    buttons[lastBtnID].$el.removeClass('indicate');
+    setTimeout(showMove, toneGap, nextMove);
   }
 
   function startUserTurn(){
@@ -268,13 +263,13 @@ var simon = (function(){
 
   function updateUserTime(timestamp){
     if (!turnStartTime) { turnStartTime = timestamp; }
-    timeLeft = timeAllowed - (timestamp - turnStartTime);
+    var timeLeft = timeAllowed - (timestamp - turnStartTime);
     if (timeLeft > 0) {
       var pctLeft =  0.1 * Math.floor( 10 * 100 * timeLeft / timeAllowed );
       $timer.css('width',pctLeft+"%");
       if (timeLeft <= 3000) {
         $timer.addClass('urgent');
-      }
+      } 
       turnTimer = requestAnimationFrame(updateUserTime);
     }
     else {
