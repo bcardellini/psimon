@@ -1,5 +1,7 @@
 var $ = require('jQuery');
 
+bjc = "bad";
+
 var simon = (function(){
 
   // default values
@@ -269,7 +271,7 @@ var simon = (function(){
       $timer.css('width',pctLeft+"%");
       if (timeLeft <= 3000) {
         $timer.addClass('urgent');
-      } 
+      }
       turnTimer = requestAnimationFrame(updateUserTime);
     }
     else {
