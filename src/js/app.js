@@ -1,7 +1,5 @@
 var $ = require('jQuery');
 
-bjc = "bad";
-
 var simon = (function(){
 
   // default values
@@ -168,8 +166,8 @@ var simon = (function(){
   }
 
   function userPressIncorrect (event, id) {
-    // negative feedback
     startSound(badTone, 'sawtooth');
+    window.navigator.vibrate(5000);
     buttons[id].$el.addClass('wrong')
                    .bind('mouseup mouseleave touchend', userReleaseIncorrect);
   }
@@ -196,6 +194,7 @@ var simon = (function(){
 
   function userReleaseIncorrect (event) {
     stopSound();
+    window.navigator.vibrate(0);
     $(event.target).removeClass('wrong')
                    .off('mouseup mouseleave touchend');
     if ( $strictIn.prop('checked') ) {  //srict mode, end game
