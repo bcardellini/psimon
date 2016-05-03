@@ -18,29 +18,28 @@ html(lang="en")
                     title psimon
                     use(xlink:href='#psimonTitle')
               #psiControls.controls
-                .controlsTop
-                  .difficulty
-                    span difficulty
-                    .buttonSet
-                      button.stepper.plus(value="plus") &#8679;
-                      #psiDifficulty(data-difficulty="7") 7
-                      button.stepper.minus(value="minus") &#8681;
+                .controlsSlider
+                  .controlsTop
+                    .difficulty
+                      span.label difficulty
+                      .buttonSet
+                        button.stepper.plus(value="plus") 
+                        #psiDifficulty(data-difficulty="7") 7
+                        button.stepper.minus(value="minus")
+                    .actions
+                      button#psiStart start    
+                  .controlsBottom           
+                    .strictness
+                      label.checkSlide
+                        span.label strict
+                        input#psiStrictness(type='checkbox', name='strict')
+                        .slider
+                          .peg
+                    .actions
+                      button#psiReset reset 
                   .levelBar
-                    .timer
-                    .level
-                      |level
-                      span#psiLevel 1
-                .controlsBottom                    
-                  .strictness
-                    label.checkSlide
-                      span strict
-                      input#psiStrictness(type='checkbox', name='strict')
-                      .slider
-                        .peg
-                  .actions
-                    button#psiStart start
-                    button#psiReset reset 
-              .messages
+                    .timer   
+              .readout WELCOME
           .buttonsContainer  
     include svg/psimon.svg
     script(src='js/bundle.js')

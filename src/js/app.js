@@ -43,12 +43,11 @@ var simon = (function(){
   var $startBtn = $simon.find('#psiStart');
   var $resetBtn = $simon.find('#psiReset');
   var $difficulty = $simon.find('#psiDifficulty');
-  var $levelOut = $simon.find('#psiLevel');
   var $strictIn = $simon.find('#psiStrictness');
   var $difficultyBtns = $simon.find('.difficulty .stepper');
   var $difficultyPlus = $difficultyBtns.filter('.plus');
   var $difficultyMinus = $difficultyBtns.filter('.minus');
-  var $msg = $simon.find('.messages');
+  var $msg = $simon.find('.readout');
   var $timer = $simon.find('.timer');
   var $stats = $simon.find('.stats');
 
@@ -216,18 +215,17 @@ var simon = (function(){
     $(event.target).removeClass('wrong')
                    .off('mouseup mouseleave touchend');
     if ( $strictIn.prop('checked') ) {  //srict mode, end game
-      $msg.text('game over').css('display','block').delay(2000).fadeOut(2000);
-      resetGameplay();
+      resetGameplay('game over');
     } else {  // replay this level's sequence
       endUserTurn();
-      $msg.text('try again').css('display','block').delay(1000).fadeOut(2000);
-      setTimeout(showMove, 1000, 0);
+      $msg.text('try again');
+      setTimeout(showMove, 2000, 0);
     }
     return false;
   }
 
   function win() {
-    $msg.text('WINNER!!').css('display','block').delay(5000).fadeOut(5000);
+    $msg.text('WINNER!!');
     resetGameplay();
   }
 
@@ -241,15 +239,16 @@ var simon = (function(){
   function startNextLevel() {
     var nextMove = Math.floor( buttonCount * Math.random() );
     seq.push(nextMove);
-    $levelOut.text(seq.length);
+    $msg.text('Level '+seq.length).fadeIn(500);
     showMove(0);
   }
 
-  function resetGameplay () {
+  function resetGameplay (msg) {
     if(isUserTurn){  // to avoid pending timouts
       endUserTurn();
       $controls.removeClass('playing');
-      $levelOut.text('1');
+      var message = (typeof msg === 'string') ? msg : 'click start to play again';
+      $msg.text(message);
       seq.length = 0;
     }
   }
@@ -297,12 +296,13 @@ var simon = (function(){
   }
 
   function timeUp(){
+    startSound(badTone, 'sawtooth');
+    setTimeout(stopSound, 800);
     $timer.removeClass('urgent');
     if ( $strictIn.prop('checked') ) {  //srict mode, end game
-      $msg.html('time is up <br> game over').css('display','block').delay(3000).fadeOut(1000);
-      resetGameplay();
+      resetGameplay('time is up, game over');
     } else {  // replay this level's sequence
-      $msg.html('time is up <br> try again').css('display','block').delay(1000).fadeOut(1000);
+      $msg.text('time is up, try again');
       endUserTurn();
       setTimeout(showMove, 1000, 0);
     }
@@ -319,6 +319,7 @@ var simon = (function(){
   }
 
 
-  $controls.fadeIn();
+  $controls.fadeIn(1000);
+  $msg.fadeIn(1000);
 
 })();
