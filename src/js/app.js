@@ -28,6 +28,13 @@ var simon = (function(){
   var turnStartTime;
   var best = 0;
 
+  //
+  if (document.documentElement.style.pointerEvents !== '')  {
+    document.getElementById('psiControls').innerHTML =  "<br>sorry,<br>"+
+      "this browser lacks a feature<br>" +
+      "required by psimon<br><br>";
+  }
+
   // cache dom handles
   var $simon = $('#simon');
   var $board = $simon.find('.board');
@@ -44,6 +51,8 @@ var simon = (function(){
   var $msg = $simon.find('.messages');
   var $timer = $simon.find('.timer');
   var $stats = $simon.find('.stats');
+
+
 
   // enable controls
   $startBtn.click(startGame);
@@ -304,6 +313,7 @@ var simon = (function(){
     }
     setTimeout(startNextLevel, 1000);
   }
+
 
   $controls.fadeIn();
 
