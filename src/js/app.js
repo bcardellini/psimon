@@ -178,7 +178,9 @@ var simon = (function(){
 
   function userPressIncorrect (event, id) {
     startSound(badTone, 'sawtooth');
-    window.navigator.vibrate(5000);
+    if(window.navigator.vibrate) {
+      window.navigator.vibrate(5000);
+    }
     buttons[id].$el.addClass('wrong')
                    .bind('mouseup mouseleave touchend', userReleaseIncorrect);
   }
@@ -208,7 +210,9 @@ var simon = (function(){
 
   function userReleaseIncorrect (event) {
     stopSound();
-    window.navigator.vibrate(0);
+    if(window.navigator.vibrate){
+      window.navigator.vibrate(0);
+    }
     $(event.target).removeClass('wrong')
                    .off('mouseup mouseleave touchend');
     if ( $strictIn.prop('checked') ) {  //srict mode, end game
