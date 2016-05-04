@@ -77,14 +77,12 @@ body, input {
       pointer-events:auto;
       overflow:hidden;
       cursor:pointer;
-      background-image:linear-gradient(rgba(100,100,100,0.6),rgba(100,100,100,0.6));
-      background-blend-mode:exclusion;
+      background-image:linear-gradient(rgba(100,100,100,0.8),rgba(100,100,100,0.8));
       &.pressed, &.indicate {
         background-image:none;
       }
       &.wrong {
         background-image:linear-gradient(@wrong, @wrong);
-        background-blend-mode:normal;
       }
     }
 
@@ -111,6 +109,7 @@ body, input {
           .centeredCell;
           padding-top:5%;
           width:100%;
+          pointer-events:none;
           color:desaturate(darken(@controlsBG, 50%),30%);
           .num {
             font-size:20px;
