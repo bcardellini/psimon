@@ -204,6 +204,7 @@ var simon = (function(){
 
   function updateHighScore(newHigh){
     $stats.html("high score: <span class='num'>"+newHigh+"</span>");
+    best=newHigh;
     $stats.fadeIn(500);
   }
 
