@@ -193,7 +193,7 @@ var simon = (function(){
         updateHighScore(seq.length);
       }
       if (seq.length === movesToWin){
-        win();
+        resetGameplay('WINNER!!');
       } else {
         endUserTurn();
         setTimeout(startNextLevel, 500);
@@ -223,11 +223,6 @@ var simon = (function(){
       setTimeout(showMove, 2000, 0);
     }
     return false;
-  }
-
-  function win() {
-    $msg.text('WINNER!!');
-    resetGameplay();
   }
 
   function endUserTurn() {
