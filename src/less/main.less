@@ -109,7 +109,7 @@ body, input {
           .centeredCell;
           padding-top:5%;
           width:100%;
-          pointer-events:none;
+          pointer-event:none;
           color:desaturate(darken(@controlsBG, 50%),30%);
           .num {
             font-size:20px;
@@ -211,7 +211,11 @@ body, input {
                   width: 1.5em;
                   text-align:center;
                   transition: background-color 0.3s;
-                  border:none;
+                  border-width:0;
+                  border-color:@controls;
+                  &:disabled {
+                    border-color:lighten(@controls,70%);
+                  }
                   &.plus {
                     &::before {
                       content:"";
@@ -219,8 +223,8 @@ body, input {
                       margin:0 auto;
                       width:0.3em;
                       height:0.3em;
-                      border-top:2px solid @controls;
-                      border-left:2px solid @controls;
+                      border-style:solid;
+                      border-width:2px 0 0 2px;
                       transform:translateY(0.1em) rotateZ(45deg);
                     }
                   }
@@ -231,8 +235,8 @@ body, input {
                       margin:0 auto;
                       width:0.3em;
                       height:0.3em;
-                      border-top:2px solid @controls;
-                      border-left:2px solid @controls;
+                      border-style:solid;
+                      border-width:2px 0 0 2px;
                       transform:translateY(-0.1em) rotateZ(225deg);
                     }
                   }

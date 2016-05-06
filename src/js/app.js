@@ -15,6 +15,7 @@ var simon = (function(){
   const userTimePerMove = 2000;
   const minDifficulty = 2;
   const maxDifficulty = 12;
+  const defaultDifficulty = 7;
   const movesToWin = 20;
 
   //gameplay internal vars
@@ -26,6 +27,7 @@ var simon = (function(){
   var turnTimer;
   var timeAllowed;
   var turnStartTime;
+  var currDiff = defaultDifficulty;
   var best = 0;
 
   //
@@ -74,19 +76,23 @@ var simon = (function(){
   }
 
   function incrementDifficulty(event){
-    var currDiff = $difficulty.data('difficulty');
-    var direction = event.target.value;
-    var newDiff = currDiff;
-    if (direction == 'plus'){
-      $difficultyMinus.prop('disabled',false);
-      newDiff++;
-    } else if (direction == 'minus') {
-      $difficultyPlus.prop('disabled',false);
-      newDiff--;
-    }
-    if ( newDiff >= maxDifficulty || newDiff <= minDifficulty ) { event.target.disabled = true; }
-    $difficulty.data('difficulty',newDiff).text(newDiff);
+    currDiff += parseInt(event.target.value);
+    renderDifficulty();
   }
+
+  function renderDifficulty(){
+    $difficultyPlus[0].disabled  = (currDiff >= maxDifficulty);
+    $difficultyMinus[0].disabled = (currDiff <= minDifficulty);
+    $difficulty.text(currDiff);
+  }
+
+  var sequenceButton = {
+
+  };
+
+  var createButton = function (i) {
+
+  };
 
 
   function generateButtons(){
@@ -306,15 +312,14 @@ var simon = (function(){
 
   function startGame(){
     $controls.addClass('playing');
-    var newButtonCount = $difficulty.data('difficulty');
-    if(newButtonCount != buttonCount){
-      buttonCount = newButtonCount;
+    if(currDiff !== buttonCount){
+      buttonCount = currDiff;
       generateButtons();
     }
     setTimeout(startNextLevel, 1000);
   }
 
-
+  renderDifficulty();
   $controls.fadeIn(1000);
   $msg.fadeIn(1000);
 
