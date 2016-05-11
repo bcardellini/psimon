@@ -1,4 +1,5 @@
 var $ = require('jQuery');
+var helpers = require('./modules/helpers');
 
 var simon = (function(){
 
@@ -8,12 +9,13 @@ var simon = (function(){
   const badTone = 100;
   const buttonSaturation = "80%";
   const buttonLightness = "70%";
-  const gapPercent = 0.3;
+  const gapPercent = 0.5;
+  const radiusPercent = 98;
   const toneTime = 500;
   const toneGap = 100;
   const userTimeBase = 4000;
   const userTimePerMove = 2000;
-  const minDifficulty = 2;
+  const minDifficulty = 3;
   const maxDifficulty = 12;
   const defaultDifficulty = 7;
   const movesToWin = 20;
@@ -40,7 +42,6 @@ var simon = (function(){
   // cache dom handles
   var $simon = $('#psimon');
   var $board = $simon.find('.psi_innerWrapper');
-  var $btnsContainer = $simon.find('.buttonsContainer');
   var $controls = $simon.find('.psiControls');
   var $startBtn = $simon.find('#psiStart');
   var $resetBtn = $simon.find('#psiReset');
@@ -50,9 +51,9 @@ var simon = (function(){
   var $difficultyPlus = $difficultyBtns.filter('.plus');
   var $difficultyMinus = $difficultyBtns.filter('.minus');
   var $msg = $simon.find('.psiReadout');
-  var $timer = $simon.find('.psiTimerBar_timer');
+  var $timer = $simon.find('.psiLevelBar_timer');
   var $stats = $simon.find('.psiStats');
-
+  var btnsSVG = document.getElementById('sequenceButtons');
 
 
   // enable controls
@@ -96,8 +97,7 @@ var simon = (function(){
 
 
   function generateButtons(){
-    $btnsContainer.find('.psiSeqBtn_target').fadeOut(200);
-    $btnsContainer.empty();
+    $(btnsSVG).empty();
     buttons.length = 0;
     var hueSpan      = Math.floor( 360 / buttonCount );
     var hueSeed      = Math.floor( hueSpan * Math.random() );
@@ -109,18 +109,23 @@ var simon = (function(){
       let btnPosition = 0.1 * Math.floor( 10 * (i*positionSpan) );
       addButton(i, btnHue, btnTone, btnPosition, positionSpan);
     }
-    $btnsContainer.find('.psiSeqBtn_target').fadeIn(600);
-    $board.css('border-color','transparent');
+    btnsSVG.style.opacity = 1;
+    setTimeout(startNextLevel, 1000);
   }
 
 
   function addButton(i, hue, tone, position, positionSpan){
-    var outerTransform =  'translateX(100%) rotate(' + position + 'deg) '+
-                          'translateX(' + gapPercent +'%)';
-    var innerTransform =  'translateX(-' + gapPercent +'%) '+
-                          'rotate(' + 0.1 * Math.ceil(10*(positionSpan-180)) + 'deg) '+
-                          'translateX(' + gapPercent +'%)';
     var bgColor = 'hsl(' + hue + ', ' + buttonSaturation + ', ' + buttonLightness + ')';
+    var pt1 = helpers.newRound( (radiusPercent-gapPercent) * Math.cos( Math.PI/180 * positionSpan/2 ) , 2 ) + " " +
+              helpers.newRound( (radiusPercent-gapPercent) * Math.sin( Math.PI/180 * positionSpan/2 ) , 2 );
+    var pt2 = helpers.newRound( (radiusPercent-gapPercent) * Math.cos( Math.PI/180 * positionSpan/2 ) , 2 ) + " " +
+              helpers.newRound( (radiusPercent-gapPercent) * Math.sin( Math.PI/180 * positionSpan/2 ) * -1 , 2 );
+    var rotation = helpers.newRound( position - 90 + positionSpan/2 , 4 );
+    var sector = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        sector.setAttribute("d", `M0 0 L${pt1} A${radiusPercent} ${radiusPercent} 0 0 0 ${pt2} Z`);
+        sector.setAttribute("transform", `rotate(${rotation} 0 0) translate(${gapPercent} 0)`);
+        sector.setAttribute("fill", bgColor);
+        sector.setAttribute("class", "psiSeq_btn");
     buttons[i] = {
       tone: tone,
       hue: hue,
@@ -131,14 +136,12 @@ var simon = (function(){
           'display':'none',
           'left':(-100 - gapPercent) + '%'
         }
-      })
+      }),
+      $sec: $(sector)
     };
-    buttons[i].$el.bind('mousedown touchstart', {id:i}, userPress);
-    $btnsContainer.append(
-      $('<div/>', { 'class':'psiSeqBtn', 'css':{'transform':outerTransform} }).append(
-        $('<div/>', { 'class':'psiSeqBtn_inner', 'css':{'transform':innerTransform} }).append( buttons[i].$el )
-      )
-    );
+    // buttons[i].$el.bind('mousedown touchstart', {id:i}, userPress);
+    buttons[i].$sec.bind('mousedown touchstart', {id:i}, userPress);
+    btnsSVG.appendChild(sector);
   }
 
   function userPress (event) {
@@ -175,8 +178,8 @@ var simon = (function(){
 
   function userPressCorrect (event, id) {
     startSound(buttons[id].tone);
-    buttons[id].$el.addClass('pressed')
-                   .bind('mouseup mouseleave touchend', userReleaseCorrect);
+    buttons[id].$sec.addClass('pressed')
+                    .bind('mouseup mouseleave touchend', userReleaseCorrect);
     userMove++;
   }
 
@@ -185,8 +188,8 @@ var simon = (function(){
     if(window.navigator.vibrate) {
       window.navigator.vibrate(5000);
     }
-    buttons[id].$el.addClass('wrong')
-                   .bind('mouseup mouseleave touchend', userReleaseIncorrect);
+    buttons[id].$sec.addClass('wrong')
+                    .bind('mouseup mouseleave touchend', userReleaseIncorrect);
   }
 
   function userReleaseCorrect (event) {
@@ -259,7 +262,7 @@ var simon = (function(){
       startUserTurn();
     }  else {
       var btnID = seq[move];
-      buttons[btnID].$el.addClass('indicate');
+      buttons[btnID].$sec.addClass('indicate');
       startSound(buttons[btnID].tone);
       setTimeout(showNextMove, toneTime, move+1, btnID);
     }
@@ -267,7 +270,7 @@ var simon = (function(){
 
   function showNextMove(nextMove, lastBtnID) {
     stopSound();
-    buttons[lastBtnID].$el.removeClass('indicate');
+    buttons[lastBtnID].$sec.removeClass('indicate');
     setTimeout(showMove, toneGap, nextMove);
   }
 
@@ -311,11 +314,18 @@ var simon = (function(){
 
   function startGame(){
     $controls.addClass('playing');
-    if(currDiff !== buttonCount){
+    if (!buttonCount) {
       buttonCount = currDiff;
       generateButtons();
+    } else {
+      if(currDiff === buttonCount){
+        setTimeout(startNextLevel, 1000);
+      } else {
+        buttonCount = currDiff;
+        btnsSVG.style.opacity = 0;
+        setTimeout(generateButtons, 500);
+      }
     }
-    setTimeout(startNextLevel, 1000);
   }
 
   renderDifficulty();

@@ -1,6 +1,7 @@
 @bodyBG: #33383A;
 //@controlsBG: hsl(40,30%,92%);
 //@controlsBG: #f8f6f2;
+@psiBG: lighten(@bodyBG, 5%);
 @controlsBG: #fbfbfb;
 @controlsBorder: 1px solid rgba(0,0,0,0.2);
 @controls: #444;
@@ -8,9 +9,10 @@
 //@titleColor: #999b9f;
 @titleColor: #b0b8bf;
 @timerBG: @titleColor;
-@urgent: #b45;
-@wrong: @urgent;
-@break1: 540px;
+@urgent: #f89;
+@wrong: #b45;
+@break1: 500px;
+@break2: 680px;
 
 /* for mixin use */
 .centeredCell {
@@ -28,63 +30,51 @@ body {
 body, input {
   font-family:"Ubuntu";
 }
+
 .psi {
   width:800px;
   max-width:100%;
-  min-width:360px;
+  min-width:320px;
   height:auto;
   margin:0 auto;
   &_outerWrapper {
     max-width:94vh;
-    min-width:360px;
+    min-width:320px;
     margin:0 auto;
     width:100%;
-    overflow:hidden;
+    //overflow:hidden;
   }
   &_innerWrapper {
     padding-bottom:100%;
-    background-color:transparent;
+    background-color:@psiBG;
     //background:#555;
     border-radius:50%;
     position:relative;
-    border-width:1px;
-    border-style:dashed;
-    border-color:rgba(255,255,255,0.3);
-    transition:border-color 0.5s;
-    //box-shadow:0 3px 4px rgba(0,0,0,0.5);
+    // border-width:1px;
+    // border-style:dashed;
+    // border-color:rgba(255,255,255,0.3);
+    // transition:border-color 0.5s;
+    box-shadow:0 3px 20px rgba(0,0,0,0.3);
   }
 }
 
-.psiSeqBtn {
-  width:50%;
-  height:100%;
+.psiSeq {
   position:absolute;
-  transform-origin:center left;
-  overflow:hidden;
-  pointer-events:none;
-  &_inner {
-    width:100%;
-    height:100%;
-    position:absolute;
-    transform-origin:center left;
-    overflow:hidden;
-  }
-  &_target {
-    width:200%;
-    height:100%;
-    left:-100%;
-    top:0;
-    border-radius:50%;
-    position:absolute;
-    pointer-events:auto;
-    overflow:hidden;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  transition: opacity 0.3s;
+  &_btn {
+    opacity:0.4;
     cursor:pointer;
-    background-image:linear-gradient(rgba(100,100,100,0.8),rgba(100,100,100,0.8));
-    &.pressed, &.indicate {
-      background-image:none;
+    &.indicate, &.pressed {
+      opacity:1;
     }
     &.wrong {
-      background-image:linear-gradient(@wrong, @wrong);
+      opacity:1;
+      fill: @wrong;
     }
   }
 }
@@ -93,7 +83,7 @@ body, input {
   position:absolute;
   width:60%;
   height:60%;
-  background:@bodyBG;
+  background:@psiBG;
   //background:#555;
   z-index:500;
   left:20%;
@@ -134,7 +124,7 @@ body, input {
     font-style:italic;
     fill:@titleColor;
     color:@controlsBG;
-    stroke:@bodyBG;
+    stroke:@psiBG;
     stroke-width:1px;
     margin:0;
     width:100%;
@@ -199,14 +189,20 @@ body, input {
     align-items:center;
     justify-content:space-around;
   }
-  font-size:16px;
+  font-size:14px;
   @media (min-width: @break1) and (min-height: @break1) {
-      font-size:24px;
+      font-size:21px;
+  }
+  @media (min-width: @break2) and (min-height: @break2) {
+      font-size:30px;
   }
   input {
-    font-size:16px;
+    font-size:14px;
     @media (min-width: @break1) and (min-height: @break1) {
-      font-size:24px;
+      font-size:21px;
+    }
+    @media (min-width: @break2) and (min-height: @break2) {
+        font-size:30px;
     }
   }
 }
@@ -253,7 +249,6 @@ body, input {
       &::before {
         content:"";
         display:block;
-        margin:0 auto;
         width:0.3em;
         height:0.3em;
         border-style:solid;
@@ -288,10 +283,13 @@ body, input {
 
 .checkSlide {
   cursor:pointer;
-  &_input[type='checkbox'] {
+  input[type='checkbox'] {
     z-index:-1;
     opacity:0;
     position:absolute;
+  }
+  span {
+    padding-right:0.6em;
   }
   &_slider {
     display:inline-block;
@@ -312,21 +310,21 @@ body, input {
     top: -0.125em;
     left: -0.125em;
     position: absolute;
-    background-color: @titleColor;
+    background-color:lighten(@titleColor,10%);
     transition:all 0.3s;
-    &::after {
-      content: "";
-      width: .25em;
-      height: .25em;
-      left: .25em;
-      top: .25em;
-      position: absolute;
-      display: block;
-      background-color: #444;
-      box-shadow: 0 1px 0 rgba(0,0,0,.2) inset, 0 1px 0 rgba(255,255,255,.2);
-      border-radius: 0.2em;
-      transition:background-color 0.3s;
-    }
+    // &::after {
+    //   content: "";
+    //   width: .25em;
+    //   height: .25em;
+    //   left: .25em;
+    //   top: .25em;
+    //   position: absolute;
+    //   display: block;
+    //   background-color: #444;
+    //   box-shadow: 0 1px 0 rgba(0,0,0,.2) inset, 0 1px 0 rgba(255,255,255,.2);
+    //   border-radius: 0.2em;
+    //   transition:background-color 0.3s;
+    // }
   }
   input:checked ~ &_slider &_peg {
     left:0.625em;
@@ -346,8 +344,8 @@ body, input {
   bottom:0;
   left:0;
   width:100%;
-  height:4px;
-  background-color:@bodyBG;
+  height:2px;
+  background-color:@psiBG;
   //background:@timerBG;
   &_timer {
     height:100%;
@@ -370,9 +368,13 @@ body, input {
   line-height:1;
   color:@controlsBG;
   padding:10px;
-  font-size:16px;
+  font-size:14px;
+  pointer-events:none;
   @media (min-width: @break1) and (min-height: @break1) {
-    font-size:24px;
+    font-size:21px;
+  }
+  @media (min-width: @break2) and (min-height: @break2) {
+    font-size:30px;
   }
 }
 

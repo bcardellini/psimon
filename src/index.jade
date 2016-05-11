@@ -14,7 +14,7 @@ html(lang="en")
               .psiStats
               .psiTitle
                 h1
-                  svg(viewbox="0 0 240 40")
+                  svg(viewbox="0 0 240 40",xmlns="http://www.w3.org/2000/svg")
                     title psimon
                     use(xlink:href='#psimonTitle')
               #psiControls.psiControls 
@@ -31,14 +31,15 @@ html(lang="en")
                     
                     label.checkSlide
                       span.psiControls_label strict
-                      input#psiStrictness.checkSlide_input(type='checkbox', name='strict')
+                      input#psiStrictness(type='checkbox', name='strict')
                       .checkSlide_slider
                         .checkSlide_peg
                     button#psiReset.psiControls_action reset 
                   .psiLevelBar
                     .psiLevelBar_timer   
               .psiReadout WELCOME
-          .buttonsContainer  
+          .buttonsContainer
+          svg#sequenceButtons.psiSeq(viewbox="-100 -100 200 200",xmlns="http://www.w3.org/2000/svg")  
     include svg/psimon.svg
     script(src='js/bundle.js')
     
