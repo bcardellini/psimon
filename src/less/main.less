@@ -10,8 +10,14 @@
 @timerBG: @titleColor;
 @urgent: #b45;
 @wrong: @urgent;
-@break1: 500px;
+@break1: 540px;
 
+/* for mixin use */
+.centeredCell {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
 
 body {
@@ -22,26 +28,20 @@ body {
 body, input {
   font-family:"Ubuntu";
 }
-#simon {
+.psi {
   width:800px;
   max-width:100%;
-  min-width:300px;
+  min-width:360px;
   height:auto;
   margin:0 auto;
-  .simonInner {
+  &_outerWrapper {
     max-width:94vh;
-    min-width:300px;
+    min-width:360px;
     margin:0 auto;
     width:100%;
     overflow:hidden;
   }
-  /* for mixin use */
-  .centeredCell {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .board {
+  &_innerWrapper {
     padding-bottom:100%;
     background-color:transparent;
     //background:#555;
@@ -52,332 +52,328 @@ body, input {
     border-color:rgba(255,255,255,0.3);
     transition:border-color 0.5s;
     //box-shadow:0 3px 4px rgba(0,0,0,0.5);
-    .btnOuter {
-      width:50%;
-      height:100%;
-      position:absolute;
-      transform-origin:center left;
-      overflow:hidden;
-      pointer-events:none;
+  }
+}
+
+.psiSeqBtn {
+  width:50%;
+  height:100%;
+  position:absolute;
+  transform-origin:center left;
+  overflow:hidden;
+  pointer-events:none;
+  &_inner {
+    width:100%;
+    height:100%;
+    position:absolute;
+    transform-origin:center left;
+    overflow:hidden;
+  }
+  &_target {
+    width:200%;
+    height:100%;
+    left:-100%;
+    top:0;
+    border-radius:50%;
+    position:absolute;
+    pointer-events:auto;
+    overflow:hidden;
+    cursor:pointer;
+    background-image:linear-gradient(rgba(100,100,100,0.8),rgba(100,100,100,0.8));
+    &.pressed, &.indicate {
+      background-image:none;
     }
-    .btnInner {
-      width:100%;
-      height:100%;
-      position:absolute;
-      transform-origin:center left;
-      overflow:hidden;
+    &.wrong {
+      background-image:linear-gradient(@wrong, @wrong);
     }
-    .btnTarget {
-      width:200%;
-      height:100%;
-      left:-100%;
-      top:0;
-      border-radius:50%;
-      position:absolute;
-      pointer-events:auto;
-      overflow:hidden;
-      cursor:pointer;
-      background-image:linear-gradient(rgba(100,100,100,0.8),rgba(100,100,100,0.8));
-      &.pressed, &.indicate {
-        background-image:none;
+  }
+}
+
+.psiCenter {
+  position:absolute;
+  width:60%;
+  height:60%;
+  background:@bodyBG;
+  //background:#555;
+  z-index:500;
+  left:20%;
+  top:20%;
+  border-radius:50%;
+  &_inner {
+    position: absolute;
+    width: 96%;
+    top: 2%;
+    left: 2%;
+    height: 96%;
+    border-radius: 50%;
+    overflow:hidden;
+  }
+}
+
+.psiStats {
+  position:absolute;
+  .centeredCell;
+  top:5%;
+  width:100%;
+  pointer-events:none;
+  color:desaturate(darken(@controlsBG, 50%),30%);
+  .psiStats_num {
+    font-size:20px;
+    vertical-align:middle;
+    padding-left:5px;
+  }
+}
+
+.psiTitle {
+  position:relative;
+  margin:16% -20% -6%;
+  width:140%;
+  height:25%;
+  z-index:200;
+  h1 {
+    font-style:italic;
+    fill:@titleColor;
+    color:@controlsBG;
+    stroke:@bodyBG;
+    stroke-width:1px;
+    margin:0;
+    width:100%;
+    height:100%;
+  }
+}
+
+.psiControls {
+  z-index: 10;
+  display:none;
+  height:30%;
+  overflow:hidden;
+  color: @controls;
+  background: @controlsBG;
+  &_slider {
+    height:200%;
+    top:0;
+    transition:transform 0.5s, top 0.5s;
+    position:relative;
+  }
+  &.playing &_slider {
+    top:-100%;
+  }
+  #psiReset {
+    height:2em;
+    opacity:0.2;
+    &:hover {
+      background: linear-gradient(to bottom, @wrong, darken(@wrong, 10%));
+    }
+  }
+  &.userTurn #psiReset {
+    opacity:1;
+  }
+  #psiStart {
+    height:2.5em;
+    &:hover {
+      background: linear-gradient(to bottom, darken(saturate(@titleColor,30%),10%), darken(saturate(@titleColor, 30%), 20%));
+    }
+  }
+  &_action{
+    .centeredCell;
+    cursor:pointer;
+    background: linear-gradient(to bottom, #555, #444);
+    border:none;
+    color:white;
+    padding:0 1em;
+    font-size:1em;
+    font-weight:300;
+    border-radius:3px;
+  }
+  &_top {
+    height:50%;
+    display: flex;
+    align-items:center;
+    justify-content: space-around;
+    position:relative;
+  }
+  &_bottom {
+    height:50%;
+    background-color:lighten(@titleColor,20%);
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+  }
+  font-size:16px;
+  @media (min-width: @break1) and (min-height: @break1) {
+      font-size:24px;
+  }
+  input {
+    font-size:16px;
+    @media (min-width: @break1) and (min-height: @break1) {
+      font-size:24px;
+    }
+  }
+}
+
+.psiDifficulty {
+  &_label {
+    display:block;
+    font-size:0.75em;
+    line-height:1;
+    font-weight:bold;
+    letter-spacing:0.1em;
+    padding-bottom:0.222em;
+  }
+  &_buttonset {
+    display:flex;
+    border:@controlsBorder;
+    border-radius:3px;
+    transition:border 0.3s;
+    &:hover {
+      border:1px solid @controls;
+      .psiDifficulty_stepper {
+        background:@activeControl;
       }
-      &.wrong {
-        background-image:linear-gradient(@wrong, @wrong);
-      }
-    }
-
-    .boardCenter {
-      position:absolute;
-      width:60%;
-      height:60%;
-      background:@bodyBG;
-      //background:#555;
-      z-index:500;
-      left:20%;
-      top:20%;
-      border-radius:50%;
-      .boardCenterInner {
-        position: absolute;
-        width: 96%;
-        top: 2%;
-        left: 2%;
-        height: 96%;
-        border-radius: 50%;
-        overflow:hidden;
-        .stats {
-          position:absolute;
-          .centeredCell;
-          padding-top:5%;
-          width:100%;
-          pointer-event:none;
-          color:desaturate(darken(@controlsBG, 50%),30%);
-          .num {
-            font-size:20px;
-            vertical-align:middle;
-            padding-left:5px;
-          }
-        }
-        .title {
-          position:relative;
-          margin:16% -20% -6%;
-          width:140%;
-          height:25%;
-          z-index:200;
-          h1 {
-            font-style:italic;
-            fill:@titleColor;
-            color:@controlsBG;
-            stroke:@bodyBG;
-            stroke-width:1px;
-            margin:0;
-            width:100%;
-            height:100%;
-          }
-
-        }
-
-        .controls {
-          z-index: 10;
-          display:none;
-          height:30%;
-          overflow:hidden;
-          color: @controls;
-          background: @controlsBG;
-          .controlsSlider {
-            height:200%;
-            top:0;
-            transition:transform 0.5s, top 0.5s;
-            position:relative;
-          }
-          &.playing .controlsSlider {
-            //transform:translateY(-50%);
-            top:-100%;
-          }
-          .label {
-            display:block;
-            font-size:0.75em;
-            line-height:1;
-            font-weight:bold;
-            letter-spacing:0.1em;
-            padding-bottom:0.222em;
-          }
-          .actions {
-            #psiReset {
-              height:2em;
-              opacity:0.2;
-              &:hover {
-                background: linear-gradient(to bottom, @wrong, darken(@wrong, 10%));
-              }
-            }
-            #psiStart {
-              height:2.5em;
-              &:hover {
-                background: linear-gradient(to bottom, darken(saturate(@titleColor,30%),10%), darken(saturate(@titleColor, 30%), 20%));
-              }
-            }
-            button {
-              .centeredCell;
-              cursor:pointer;
-              background: linear-gradient(to bottom, #555, #444);
-              border:none;
-              color:white;
-              padding:0 1em;
-              font-size:1em;
-              font-weight:300;
-              border-radius:3px;
-            }
-          }
-          &.userTurn .actions #psiReset {
-            opacity:1;
-          }
-
-          .controlsTop {
-            height:50%;
-            display: flex;
-            align-items:center;
-            justify-content: space-around;
-            position:relative;
-            .difficulty {
-              .buttonSet {
-                display:flex;
-                border:@controlsBorder;
-                border-radius:3px;
-                transition:border 0.3s;
-                .stepper {
-                  .centeredCell;
-                  cursor:pointer;
-                  background-color: transparent;
-                  font-size: 1em;
-                  width: 1.5em;
-                  text-align:center;
-                  transition: background-color 0.3s;
-                  border-width:0;
-                  border-color:@controls;
-                  &:disabled {
-                    border-color:lighten(@controls,70%);
-                  }
-                  &.plus {
-                    &::before {
-                      content:"";
-                      display:block;
-                      margin:0 auto;
-                      width:0.3em;
-                      height:0.3em;
-                      border-style:solid;
-                      border-width:2px 0 0 2px;
-                      transform:translateY(0.1em) rotateZ(45deg);
-                    }
-                  }
-                  &.minus {
-                    &::before {
-                      content:"";
-                      display:block;
-                      margin:0 auto;
-                      width:0.3em;
-                      height:0.3em;
-                      border-style:solid;
-                      border-width:2px 0 0 2px;
-                      transform:translateY(-0.1em) rotateZ(225deg);
-                    }
-                  }
-                }
-                #psiDifficulty {
-                  line-height:1;
-                  width:3em;
-                  text-align:center;
-                  padding:0.25em 0;
-                  color:@controls;
-                  background:transparent;
-                  border-left: @controlsBorder;
-                  border-right:@controlsBorder;
-                }
-                &:hover {
-                  border:1px solid @controls;
-                  .stepper {
-                    background:@activeControl;
-                  }
-                  #psiDifficulty {
-                    border-left:1px solid @controls;
-                    border-right:1px solid @controls;
-                  }
-                }
-              }
-            }
-          }
-
-          .controlsBottom {
-            height:50%;
-            background-color:lighten(@titleColor,20%);
-            display:flex;
-            align-items:center;
-            justify-content:space-around;
-            .strictness {
-              .checkSlide {
-                cursor:pointer;
-                input[type='checkbox'] {
-                  z-index:-1;
-                  opacity:0;
-                  position:absolute;
-                }
-                .slider {
-                  display:inline-block;
-                  position:relative;
-                  background: #444;
-                  height:.5em;
-                  width:1.25em;
-                  bottom:0.15em;
-                  border-radius:0.25em;
-                  box-shadow:0 1px 0 rgba(0,0,0,0.5) inset, 0 1px 0 rgba(255,255,255,0.9);
-                  .peg {
-                    content:"";
-                    width: .75em;
-                    height: .75em;
-                    box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 1px 0 rgba(0,0,0,0.5);
-                    border-radius: .5em;
-                    top: -0.125em;
-                    left: -0.125em;
-                    position: absolute;
-                    background-color: @titleColor;
-                    transition:all 0.3s;
-                    &::after {
-                      content: "";
-                      width: .25em;
-                      height: .25em;
-                      left: .25em;
-                      top: .25em;
-                      position: absolute;
-                      display: block;
-                      background-color: #444;
-                      box-shadow: 0 1px 0 rgba(0,0,0,.2) inset, 0 1px 0 rgba(255,255,255,.2);
-                      border-radius: 0.2em;
-                      transition:background-color 0.3s;
-                    }
-                  }
-
-                }
-                input:checked ~ .slider .peg {
-                  left:0.625em;
-                  background-color:saturate(@titleColor,40%);
-                  &::after {
-                    background-color: #fff;
-                  }
-                }
-                &:hover .slider .peg {
-                  background-color:saturate(@titleColor, 40%);
-                }
-              }
-
-            }
-          }
-          .levelBar {
-            position:absolute;
-            bottom:0;
-            left:0;
-            width:100%;
-            height:4px;
-            background-color:@bodyBG;
-            //background:@timerBG;
-
-            .timer {
-              height:100%;
-              position:absolute;
-              top:0;
-              left:0;
-              width:100%;
-              background-color:@controlsBG;
-              &.urgent {
-                background-color:@urgent;
-              }
-            }
-          }
-
-          font-size:16px;
-          @media (min-width: @break1) and (min-height: @break1) {
-              font-size:24px;
-          }
-          input {
-            font-size:16px;
-            @media (min-width: @break1) and (min-height: @break1) {
-              font-size:24px;
-            }
-          }
-        }
-        .readout {
-          .centeredCell;
-          display:none;
-          background-color:@timerBG;
-          font-style:italic;
-          line-height:1;
-          color:@controlsBG;
-          padding:10px;
-          font-size:16px;
-          @media (min-width: @break1) and (min-height: @break1) {
-            font-size:24px;
-          }
-        }
+      #psiDifficulty {
+        border-left:1px solid @controls;
+        border-right:1px solid @controls;
       }
     }
   }
-
+  &_stepper {
+    .centeredCell;
+    cursor:pointer;
+    background-color: transparent;
+    font-size: 1em;
+    width: 1.5em;
+    text-align:center;
+    transition: background-color 0.3s;
+    border-width:0;
+    border-color:@controls;
+    &:disabled {
+      border-color:lighten(@controls,70%);
+    }
+    &.plus {
+      &::before {
+        content:"";
+        display:block;
+        margin:0 auto;
+        width:0.3em;
+        height:0.3em;
+        border-style:solid;
+        border-width:2px 0 0 2px;
+        transform:translateY(0.1em) rotateZ(45deg);
+      }
+    }
+    &.minus {
+      &::before {
+        content:"";
+        display:block;
+        margin:0 auto;
+        width:0.3em;
+        height:0.3em;
+        border-style:solid;
+        border-width:2px 0 0 2px;
+        transform:translateY(-0.1em) rotateZ(225deg);
+      }
+    }
+  }
+  #psiDifficulty {
+    line-height:1;
+    width:3em;
+    text-align:center;
+    padding:0.25em 0;
+    color:@controls;
+    background:transparent;
+    border-left: @controlsBorder;
+    border-right:@controlsBorder;
+  }
 }
+
+.checkSlide {
+  cursor:pointer;
+  &_input[type='checkbox'] {
+    z-index:-1;
+    opacity:0;
+    position:absolute;
+  }
+  &_slider {
+    display:inline-block;
+    position:relative;
+    background: #444;
+    height:.5em;
+    width:1.25em;
+    bottom:0.15em;
+    border-radius:0.25em;
+    box-shadow:0 1px 0 rgba(0,0,0,0.5) inset, 0 1px 0 rgba(255,255,255,0.9);
+  }
+  &_peg {
+    content:"";
+    width: .75em;
+    height: .75em;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 1px 0 rgba(0,0,0,0.5);
+    border-radius: .5em;
+    top: -0.125em;
+    left: -0.125em;
+    position: absolute;
+    background-color: @titleColor;
+    transition:all 0.3s;
+    &::after {
+      content: "";
+      width: .25em;
+      height: .25em;
+      left: .25em;
+      top: .25em;
+      position: absolute;
+      display: block;
+      background-color: #444;
+      box-shadow: 0 1px 0 rgba(0,0,0,.2) inset, 0 1px 0 rgba(255,255,255,.2);
+      border-radius: 0.2em;
+      transition:background-color 0.3s;
+    }
+  }
+  input:checked ~ &_slider &_peg {
+    left:0.625em;
+    background-color:saturate(@titleColor,40%);
+    &::after {
+      background-color: #fff;
+    }
+  }
+  &:hover &_slider &_peg {
+    background-color:saturate(@titleColor, 40%);
+  }
+}
+
+
+.psiLevelBar {
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:4px;
+  background-color:@bodyBG;
+  //background:@timerBG;
+  &_timer {
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    background-color:@controlsBG;
+    &.urgent {
+      background-color:@urgent;
+    }
+  }
+}
+
+.psiReadout {
+  .centeredCell;
+  display:none;
+  background-color:@timerBG;
+  font-style:italic;
+  line-height:1;
+  color:@controlsBG;
+  padding:10px;
+  font-size:16px;
+  @media (min-width: @break1) and (min-height: @break1) {
+    font-size:24px;
+  }
+}
+
 #svgSprite {display:none;}

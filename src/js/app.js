@@ -38,20 +38,20 @@ var simon = (function(){
   }
 
   // cache dom handles
-  var $simon = $('#simon');
-  var $board = $simon.find('.board');
+  var $simon = $('#psimon');
+  var $board = $simon.find('.psi_innerWrapper');
   var $btnsContainer = $simon.find('.buttonsContainer');
-  var $controls = $simon.find('.controls');
+  var $controls = $simon.find('.psiControls');
   var $startBtn = $simon.find('#psiStart');
   var $resetBtn = $simon.find('#psiReset');
   var $difficulty = $simon.find('#psiDifficulty');
   var $strictIn = $simon.find('#psiStrictness');
-  var $difficultyBtns = $simon.find('.difficulty .stepper');
+  var $difficultyBtns = $simon.find('.psiDifficulty_stepper');
   var $difficultyPlus = $difficultyBtns.filter('.plus');
   var $difficultyMinus = $difficultyBtns.filter('.minus');
-  var $msg = $simon.find('.readout');
-  var $timer = $simon.find('.timer');
-  var $stats = $simon.find('.stats');
+  var $msg = $simon.find('.psiReadout');
+  var $timer = $simon.find('.psiTimerBar_timer');
+  var $stats = $simon.find('.psiStats');
 
 
 
@@ -96,12 +96,11 @@ var simon = (function(){
 
 
   function generateButtons(){
-    $btnsContainer.find('.btnTarget').fadeOut(200);
+    $btnsContainer.find('.psiSeqBtn_target').fadeOut(200);
     $btnsContainer.empty();
     buttons.length = 0;
     var hueSpan      = Math.floor( 360 / buttonCount );
     var hueSeed      = Math.floor( hueSpan * Math.random() );
-    //hueSeed = 0;  // use if shifting colors makes the game too hard
     var toneSpan     = Math.floor( (maxTone-minTone) / buttonCount );
     var positionSpan = 360 / buttonCount;
     for (let i=0; i<buttonCount; i++){
@@ -110,7 +109,7 @@ var simon = (function(){
       let btnPosition = 0.1 * Math.floor( 10 * (i*positionSpan) );
       addButton(i, btnHue, btnTone, btnPosition, positionSpan);
     }
-    $btnsContainer.find('.btnTarget').fadeIn(600);
+    $btnsContainer.find('.psiSeqBtn_target').fadeIn(600);
     $board.css('border-color','transparent');
   }
 
@@ -126,7 +125,7 @@ var simon = (function(){
       tone: tone,
       hue: hue,
       $el: $('<div/>', {
-        'class':'btnTarget',
+        'class':'psiSeqBtn_target',
         'css':{
           'background-color':bgColor,
           'display':'none',
@@ -136,8 +135,8 @@ var simon = (function(){
     };
     buttons[i].$el.bind('mousedown touchstart', {id:i}, userPress);
     $btnsContainer.append(
-      $('<div/>', { 'class':'btnOuter', 'css':{'transform':outerTransform} }).append(
-        $('<div/>', { 'class':'btnInner', 'css':{'transform':innerTransform} }).append( buttons[i].$el )
+      $('<div/>', { 'class':'psiSeqBtn', 'css':{'transform':outerTransform} }).append(
+        $('<div/>', { 'class':'psiSeqBtn_inner', 'css':{'transform':innerTransform} }).append( buttons[i].$el )
       )
     );
   }
@@ -209,7 +208,7 @@ var simon = (function(){
   }
 
   function updateHighScore(newHigh){
-    $stats.html("high score: <span class='num'>"+newHigh+"</span>");
+    $stats.html("high score: <span class='psiStats_num'>"+newHigh+"</span>");
     best=newHigh;
     $stats.fadeIn(500);
   }

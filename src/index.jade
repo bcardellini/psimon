@@ -5,41 +5,39 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     link(rel='stylesheet', href='css/main.css')
   body
-    #simon
-      .simonInner
-        .board
-          .boardCenter
-            .boardCenterInner
+    #psimon.psi
+      .psi_outerWrapper
+        .psi_innerWrapper
+          .psiCenter
+            .psiCenter_inner
               //.bg &Psi;
-              .stats
-              .title
+              .psiStats
+              .psiTitle
                 h1
                   svg(viewbox="0 0 240 40")
                     title psimon
                     use(xlink:href='#psimonTitle')
-              #psiControls.controls
-                .controlsSlider
-                  .controlsTop
-                    .difficulty
-                      span.label difficulty
-                      .buttonSet
-                        button.stepper.plus(value="1") 
-                        #psiDifficulty()
-                        button.stepper.minus(value="-1")
-                    .actions
-                      button#psiStart start    
-                  .controlsBottom           
-                    .strictness
-                      label.checkSlide
-                        span.label strict
-                        input#psiStrictness(type='checkbox', name='strict')
-                        .slider
-                          .peg
-                    .actions
-                      button#psiReset reset 
-                  .levelBar
-                    .timer   
-              .readout WELCOME
+              #psiControls.psiControls 
+                .psiControls_slider
+                  .psiControls_top
+                    .psiDifficulty
+                      span.psiDifficulty_label difficulty
+                      .psiDifficulty_buttonset
+                        button.psiDifficulty_stepper.plus(value="1") 
+                        #psiDifficulty
+                        button.psiDifficulty_stepper.minus(value="-1")
+                    button#psiStart.psiControls_action start    
+                  .psiControls_bottom           
+                    
+                    label.checkSlide
+                      span.psiControls_label strict
+                      input#psiStrictness.checkSlide_input(type='checkbox', name='strict')
+                      .checkSlide_slider
+                        .checkSlide_peg
+                    button#psiReset.psiControls_action reset 
+                  .psiLevelBar
+                    .psiLevelBar_timer   
+              .psiReadout WELCOME
           .buttonsContainer  
     include svg/psimon.svg
     script(src='js/bundle.js')

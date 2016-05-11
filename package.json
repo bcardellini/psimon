@@ -13,7 +13,7 @@
     "prebuild:scripts": "npm run lint && rimraf public/js",
     "prebuild:scripts2": "rimraf public/js",
     "build": "npm run build:scripts && npm run build:styles && npm run build:markup ",
-    "build:markup": "jade src -o public ",
+    "build:markup": "jade src -P -o public ",
     "build:styles": "mkdir public\\css && lessc src/less/main.less | postcss --use autoprefixer --autoprefixer.browsers \"> 3% in US\" --use postcss-font-magician | cleancss -o public/css/main.css --s1",
     "build:scripts0": "mkdir public\\js && browserify src/js/app.js -d -o public/js/bundle.js",
     "build:scripts": "mkdir public\\js && browserify -d src/js/app.js -t [ babelify --presets [ es2015 ] ] > public/js/bundle.js",
